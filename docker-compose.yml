@@ -1,0 +1,6 @@
+services:
+  omniversenet:
+    image: omniversenet
+    build:
+      context: .
+      dockerfile: ./Dockerfile

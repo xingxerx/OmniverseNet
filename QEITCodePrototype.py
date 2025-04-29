@@ -23,36 +23,49 @@ def encode_data(circuit, qr, data): # Accept qr
     circuit.x(qr[0])
   # No need to return circuit, it's modified in-place
 
-# --- Updated measure_and_decode function ---
-def measure_and_decode(circuit, qr, cr, backend, shots=1024): # Accept qr, cr, backend, add shots arg
+# --- Corrected measure_and_decode function ---
+def measure_and_decode(circuit, qr, cr, backend, shots=1024):
   """Measures the circuit, runs it on the backend, and decodes the result."""
   circuit.measure(qr, cr)
-  print("Circuit before execution:\n", circuit) # Optional: See the circuit
+  print("Circuit before execution:\n", circuit)
 
   if backend is None:
       print("Error: Backend object is None. Cannot run the circuit.")
-      return None # Or raise an appropriate error
+      return None
 
-  # --- FIX: Replace execute with backend.run() ---
-  # job = execute(circuit, backend, shots=shots) # Old, deprecated way
-  job = backend.run(circuit, shots=shots)       # New, correct way
-  # --- End of Fix ---
-
+  job = backend.run(circuit, shots=shots)
   result = job.result()
   counts = result.get_counts(circuit)
-  print("Counts:", counts) # See the results
+  print("Counts:", counts)
 
-  # Simple decoding logic (can be refined)
-  # Assumes '00' means 0 was sent, '11' means 1 was sent
+  # --- Corrected Decoding Logic ---
+  # Get counts for all possible outcomes
   count_00 = counts.get('00', 0)
   count_11 = counts.get('11', 0)
+  count_01 = counts.get('01', 0)
+  count_10 = counts.get('10', 0)
 
-  # Basic check for unexpected results
-  if counts.get('01', 0) > 0 or counts.get('10', 0) > 0:
-      print("Warning: Unexpected measurement outcomes (01 or 10) detected.")
+  # Check if the pair {00, 11} or {01, 10} has more counts
+  correlated_counts = count_00 + count_11   # Expected for sending 0
+  anti_correlated_counts = count_01 + count_10 # Expected for sending 1
 
-  decoded_data = 1 if count_11 > count_00 else 0
+  # Decode based on which pair dominates
+  if anti_correlated_counts > correlated_counts:
+      decoded_data = 1
+      print("Decoded based on dominance of '01'/'10' counts.")
+  else:
+      decoded_data = 0
+      print("Decoded based on dominance of '00'/'11' counts.")
+  # --- End of Corrected Logic ---
+
+  # Optional: Refine the warning message
+  # if (count_01 > 0 or count_10 > 0) and decoded_data == 0:
+  #     print("Warning: Detected '01' or '10' outcomes, but decoded as 0.")
+  # elif (count_00 > 0 or count_11 > 0) and decoded_data == 1:
+  #      print("Warning: Detected '00' or '11' outcomes, but decoded as 1.")
+
   return decoded_data
+
 
 # --- Main Execution Block ---
 if __name__ == "__main__":

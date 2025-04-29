@@ -1,30 +1,44 @@
 # e:\OmniverseNet\QEITCodePrototype.py
 import numpy as np
-# Consider importing specific items instead of '*' for better clarity and safety
-# from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
-from qiskit import * # Keeping original import for now, but specific imports are recommended
+# 1. Specific Imports
+from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
+from qiskit.providers.backend import BackendV1 as Backend # For type hinting backend
+from qiskit.result import Result
+from qiskit.qobj.utils import MeasLevel
+
+# Type hinting imports
+from typing import Tuple, Optional, Dict
+
+# --- Constants ---
+DEFAULT_SHOTS = 2048
 
 # --- Function Definitions ---
-# (Assuming you are using the second set of definitions in your file,
-#  as the line numbers in the error match those)
 
-def generate_entangled_pair():
+def generate_entangled_pair() -> Tuple[QuantumCircuit, QuantumRegister, ClassicalRegister]:
   """Creates a circuit for a 2-qubit Bell state |Φ+>."""
-  qr = QuantumRegister(2, name="q") # Give registers names
+  qr = QuantumRegister(2, name="q")
   cr = ClassicalRegister(2, name="c")
   circuit = QuantumCircuit(qr, cr, name="Entanglement")
   circuit.h(qr[0])
   circuit.cx(qr[0], qr[1])
-  return circuit, qr, cr # Return registers
+  return circuit, qr, cr
 
-def encode_data(circuit, qr, data): # Accept qr
-  """Encodes a classical bit (0 or 1) onto the first qubit (qr[0])."""
+def encode_data(circuit: QuantumCircuit, qr: QuantumRegister, data: int) -> None:
+  """Encodes a classical bit (0 or 1) onto the first qubit (qr[0]).
+     Modifies the circuit in-place.
+  """
+  if not isinstance(data, int) or data not in [0, 1]:
+      raise ValueError("Data to encode must be 0 or 1.")
   if data == 1:
     circuit.x(qr[0])
-  # No need to return circuit, it's modified in-place
 
-# --- Corrected measure_and_decode function ---
-def measure_and_decode(circuit, qr, cr, backend, shots=1024):
+def measure_and_decode(
+    circuit: QuantumCircuit,
+    qr: QuantumRegister,
+    cr: ClassicalRegister,
+    backend: Backend, # Use imported Backend type
+    shots: int = DEFAULT_SHOTS
+) -> Optional[int]:
   """Measures the circuit, runs it on the backend, and decodes the result."""
   circuit.measure(qr, cr)
   print("Circuit before execution:\n", circuit)
@@ -33,73 +47,79 @@ def measure_and_decode(circuit, qr, cr, backend, shots=1024):
       print("Error: Backend object is None. Cannot run the circuit.")
       return None
 
-  job = backend.run(circuit, shots=shots)
-  result = job.result()
-  counts = result.get_counts(circuit)
-  print("Counts:", counts)
+  try:
+      # Use backend.run() - ensure backend is compatible or use execute if needed
+      # Note: backend.run() might return different job types depending on provider
+      job = backend.run(circuit, shots=shots)
+      result: Result = job.result() # Add type hint for result
+      counts: Dict[str, int] = result.get_counts(circuit)
+      print("Counts:", counts)
+  except Exception as e:
+      print(f"Error running/getting results from backend: {e}")
+      return None
+
 
   # --- Corrected Decoding Logic ---
-  # Get counts for all possible outcomes
   count_00 = counts.get('00', 0)
   count_11 = counts.get('11', 0)
   count_01 = counts.get('01', 0)
   count_10 = counts.get('10', 0)
 
-  # Check if the pair {00, 11} or {01, 10} has more counts
   correlated_counts = count_00 + count_11   # Expected for sending 0
   anti_correlated_counts = count_01 + count_10 # Expected for sending 1
 
-  # Decode based on which pair dominates
   if anti_correlated_counts > correlated_counts:
       decoded_data = 1
       print("Decoded based on dominance of '01'/'10' counts.")
   else:
+      # Default to 0 if counts are equal or correlated counts dominate
       decoded_data = 0
-      print("Decoded based on dominance of '00'/'11' counts.")
-  # --- End of Corrected Logic ---
+      print("Decoded based on dominance of '00'/'11' counts (or tie).")
 
-  # Optional: Refine the warning message
-  # if (count_01 > 0 or count_10 > 0) and decoded_data == 0:
-  #     print("Warning: Detected '01' or '10' outcomes, but decoded as 0.")
-  # elif (count_00 > 0 or count_11 > 0) and decoded_data == 1:
-  #      print("Warning: Detected '00' or '11' outcomes, but decoded as 1.")
+  # Optional: Add warning for unexpected states if significant
+  total_counts = sum(counts.values())
+  unexpected_counts = total_counts - correlated_counts - anti_correlated_counts
+  if unexpected_counts > 0:
+      print(f"Warning: Detected {unexpected_counts}/{total_counts} counts in unexpected states.")
 
   return decoded_data
 
 
 # --- Main Execution Block ---
 if __name__ == "__main__":
-    backend = None # Initialize backend to None
+    backend_instance: Optional[Backend] = None # Type hint for backend
     try:
-        # It's good practice to import specific modules where needed
         from qiskit_aer import Aer
-        backend = Aer.get_backend('qasm_simulator')
+        # Specify the desired simulator
+        backend_instance = Aer.get_backend('qasm_simulator')
+        print(f"Using backend: {backend_instance.name}")
     except ImportError:
         print("ERROR: qiskit-aer not found or failed to import.")
         print("Please install it: pip install qiskit-aer")
-        exit(1) # Exit if backend cannot be initialized
+        exit(1)
     except Exception as e:
         print(f"An error occurred while getting the backend: {e}")
         exit(1)
 
-
+    # --- Simulation ---
     # 1. Generate pair
     entanglement_circuit, qr, cr = generate_entangled_pair()
     print("Generated entanglement circuit.")
 
     # 2. Choose data
-    data_to_send = 1 # Or 0
+    data_to_send: int = 1 # Or 0
     print(f"Data to send: {data_to_send}")
 
-    # 3. Encode (on a copy to keep original separate if needed)
+    # 3. Encode
     teleport_circuit = entanglement_circuit.copy(name="Encoding")
-    encode_data(teleport_circuit, qr, data_to_send) # Pass qr here
+    encode_data(teleport_circuit, qr, data_to_send)
     print("Encoded data onto circuit.")
 
     # 4. Measure and Decode
     print("Measuring and decoding...")
-    # Pass shots explicitly if you want something other than the default
-    received_data = measure_and_decode(teleport_circuit, qr, cr, backend, shots=2048)
+    received_data: Optional[int] = measure_and_decode(
+        teleport_circuit, qr, cr, backend_instance, shots=DEFAULT_SHOTS
+    )
 
     # --- Output Results ---
     if received_data is not None:
@@ -111,5 +131,5 @@ if __name__ == "__main__":
         else:
             print("Transmission Failed!")
     else:
-        print("\nDecoding failed.")
+        print("\nDecoding failed or simulation error occurred.")
 

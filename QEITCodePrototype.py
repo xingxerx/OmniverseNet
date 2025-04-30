@@ -2,12 +2,13 @@
 import numpy as np
 # 1. Specific Imports
 from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit
-from qiskit.providers.backend import BackendV1 as Backend # For type hinting backend
-from qiskit.result import Result
-from qiskit.qobj.utils import MeasLevel
+# Import the current base Backend class
+from qiskit.providers import Backend # For type hinting backend from qiskit.result import Result
+from qiskit.providers import Backend # For type hinting backend from qiskit.result import Result # REMOVED: from qiskit.qobj.utils import MeasLevel (Not used)
 
 # Type hinting imports
 from typing import Tuple, Optional, Dict
+
 
 # --- Constants ---
 DEFAULT_SHOTS = 2048
@@ -132,4 +133,3 @@ if __name__ == "__main__":
             print("Transmission Failed!")
     else:
         print("\nDecoding failed or simulation error occurred.")
-

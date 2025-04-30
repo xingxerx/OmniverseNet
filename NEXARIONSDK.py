@@ -1,5 +1,7 @@
 import NexarionLib
-from QuantumEntanglement import Entangle
+# Import the specific function you need from the correct file
+# For example, if you need generate_entangled_pair:
+from QEITCodePrototype import generate_entangled_pair
 
 class OmniverseNetActivator:
   # Corrected constructor name from _init_ to __init__

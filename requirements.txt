@@ -2,3 +2,5 @@ wifi
 location
 flask
 numpy
+qiskit
+qiskit-aer

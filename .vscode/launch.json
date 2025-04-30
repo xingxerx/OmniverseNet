@@ -1,40 +1,52 @@
 {
     "configurations": [
         {
-            "name": "Python Debugger: Attach using Process Id",
+            "name": "OmniverseNet Debugger: Attach to Container",
             "type": "debugpy",
             "request": "attach",
-            "processId": "${command:pickProcess}"
+            "processId": "${command:pickProcess}",
+            // Note: 'containerName' is not a standard 'debugpy' property for PID attach.
+            // Attaching usually connects to a host/port or picks a host PID.
+            // This might be intended for a different attach method (e.g., port attach)
+            // or might be ignored by the standard debugpy adapter.
+            "containerName": "omniversenet-dev"
         },
         {
-            "name": "Python Debugger: Current File with Arguments",
-            "type": "debugpy",
+            "name": "OmniverseNet Debugger: Launch in Container",
+            "type": "docker", // Uses VS Code Docker extension
             "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
-            "args": "${command:pickArgs}"
-        },
-        {
-            "name": "Python Debugger: Current File",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal"
-        },
-        {
-            "name": "Containers: Python - General",
-            "type": "docker",
-            "request": "launch",
-            "preLaunchTask": "docker-run: debug",
+            "preLaunchTask": "docker-run: debug", // Runs tasks from tasks.json
             "python": {
                 "pathMappings": [
                     {
                         "localRoot": "${workspaceFolder}",
-                        "remoteRoot": "/app"
+                        "remoteRoot": "/app" // Maps local code to container code path
                     }
                 ],
                 "projectType": "general"
             }
+        },
+        {
+            "name": "CGX Debugger: Launch",
+            // Assumes a VS Code extension provides the 'cgx-debugger' type
+            "type": "cgx-debugger",
+            "request": "launch",
+            "program": "${workspaceFolder}/cgx/bin/debugger", // Path to the CGX debugger executable
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Full Stack Debugger: OmniverseNet + CGX",
+            "type": "composite", // Allows launching multiple configurations together
+            // The 'requests' field is not standard for composite debuggers;
+            // the 'configurations' list defines what to launch.
+            // "requests": [
+            //  "launch",
+            //  "attach"
+            // ],
+            "configurations": [
+                "OmniverseNet Debugger: Launch in Container", // Name of the OmniverseNet config
+                "CGX Debugger: Launch" // Name of the CGX config
+            ]
         }
     ]
 }

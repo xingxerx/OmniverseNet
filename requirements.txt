@@ -1,3 +1,4 @@
 wifi
 location
 flask
+numpy

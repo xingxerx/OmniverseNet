@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MindPortalApp</string> <!-- Or your actual app name -->
+    <string name="greeting_message">Hello Mind Portal!</string>
+</resources>

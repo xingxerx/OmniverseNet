@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 def analyze_cross_reality_data(aligned_realities):
@@ -32,4 +33,3 @@ def identify_optimal_realities(output_df):
     optimal_realities = output_df.nlargest(3, 'Predicted Stability')
     
     return optimal_realities
-

@@ -3,6 +3,7 @@ Placeholder module for the Nexus Portal functionality.
 """
 
 class NexusPortal:
+    """Simulates the Nexus Portal interface."""
     def visit_random_universe(self):
         print("Visited a random universe (simulated).")
 

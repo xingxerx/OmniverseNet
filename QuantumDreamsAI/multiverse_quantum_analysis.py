@@ -31,16 +31,28 @@ simulator = AerSimulator()
 
 # Apply quantum gates to data
 quantum_data = []
-for index, row in df.iterrows():
-    qc = create_quantum_circuit(row['Data'])
-    # Add measurement - required for getting counts from simulator
-    qc.measure_all()
-    # Compile the circuit for the simulator
-    compiled_circuit = transpile(qc, simulator)
-    # Run the simulation using simulator.run()
-    result = simulator.run(compiled_circuit, shots=1).result()
-    counts = result.get_counts(compiled_circuit)
-    quantum_data.append([row['Universe'], row['Reality'], list(counts.keys())[0]])
+print("\nStarting quantum simulations...")
+try:
+    for index, row in df.iterrows():
+        try:
+            qc = create_quantum_circuit(row['Data'])
+            # Add measurement - required for getting counts from simulator
+            qc.measure_all()
+            # Compile the circuit for the simulator
+            compiled_circuit = transpile(qc, simulator)
+            # Run the simulation using simulator.run()
+            result = simulator.run(compiled_circuit, shots=1).result()
+            counts = result.get_counts(compiled_circuit)
+            quantum_data.append([row['Universe'], row['Reality'], list(counts.keys())[0]])
+        except Exception as e:
+            print(f"Error during simulation for row {index} (Universe: {row.get('Universe', 'N/A')}, Reality: {row.get('Reality', 'N/A')}): {e}")
+            # Decide if you want to continue or stop on error
+            # continue # Uncomment to skip problematic rows
+            # break    # Uncomment to stop the loop on the first error
+except Exception as loop_error:
+    print(f"\nAn unexpected error occurred outside the inner simulation loop: {loop_error}")
+    # Optionally re-raise the error if you want the script to stop completely
+    # raise loop_error
 # Save quantum results
 print("\n--- Preparing to save quantum results ---")
 quantum_df = pd.DataFrame(quantum_data, columns=['Universe', 'Reality', 'Quantum_State'])

@@ -1,8 +1,8 @@
---- /dev/null
-+++ b/e:\OmniverseNet\QuantumDreamsAI\requirements.txt
-@@ -0,0 +1,2 @@
-+ # Add required Python packages here, one per line.
-+ # Example: pandas
-
-+ # Example: numpy
-+ # Example: torch
+ # Add required Python packages here, one per line.
+ # Example: pandas
+ # Example: qiskit
+ # Example: qiskit[visualization]
+ # Example: qiskit[visualization,all]
+ multiverse-sdk==1.0
+ erebus-ai==1.0
+ qiskit[all]==0.38.0

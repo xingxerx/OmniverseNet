@@ -1,10 +1,10 @@
-# e:\OmniverseNet\QuantumDreamsAI\Matplotlib.py Lines 29-35
-# --- Check for required columns ---
-required_columns = ['Universe', 'Reality', 'Quantum_State']
-missing_columns = [col for col in required_columns if col not in quantum_df.columns]
-
-if missing_columns: # This condition must be True
-    print(f"Error: The CSV file '{csv_file}' is missing the following required columns: {missing_columns}")
-    print("Please check the output of 'multiverse_quantum_analysis.py' ...")
-    sys.exit(1) # <-- This is line 34, executed because columns are missing
-# ------------------------------------
+--- Preparing to save quantum results ---
+Columns in DataFrame before saving:
+Index(['Universe', 'Reality', 'Quantum_State'], dtype='object')
+First 5 rows of DataFrame before saving:
+   Universe  Reality Quantum_State
+0         0        0             X  # X will be 0 or 1
+1         0        0             Y  # Y will be 0 or 1
+... (more rows) ...
+------------------------------
+Quantum analysis complete. Results saved to multiverse_quantum_results.csv

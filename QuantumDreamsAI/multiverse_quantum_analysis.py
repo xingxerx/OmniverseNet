@@ -54,12 +54,6 @@ except Exception as loop_error:
     # Optionally re-raise the error if you want the script to stop completely
     # raise loop_error
 # Save quantum results
-print("\n--- Preparing to save quantum results ---")
 quantum_df = pd.DataFrame(quantum_data, columns=['Universe', 'Reality', 'Quantum_State'])
-print("Columns in DataFrame before saving:")
-print(quantum_df.columns)
-print("First 5 rows of DataFrame before saving:")
-print(quantum_df.head())
-print("-" * 30)
 quantum_df.to_csv('multiverse_quantum_results.csv', index=False)
 print("Quantum analysis complete. Results saved to multiverse_quantum_results.csv")

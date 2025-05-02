@@ -1,17 +1,6 @@
---- a/E:\OmniverseNet\QuantumDreamsAI\cgx_game_state_eternal.dockerfile
-+++ b/E:\OmniverseNet\QuantumDreamsAI\cgx_game_state_eternal.dockerfile
-@@ -7,8 +7,8 @@
- RUN pip install -r requirements.txt
- # Copy game state files
- COPY game_state.py .
--COPY nexus_explorer.py .
--COPY mv_sdk.py .       # Assuming this is the correct SDK file
--COPY erebus_ai.py .    # Assuming this is the correct AI file
-+COPY nexus_explorer.py /app/nexus_explorer.py # Explicit destination
-+COPY mv_sdk.py /app/mv_sdk.py             # Explicit destination
-+COPY erebus_ai.py /app/erebus_ai.py       # Explicit destination
- # Expose port for potential future online play
- EXPOSE 8080
- # Run game state command
-
-    CMD ["python", "game_state.py"] # Change this to the appropriate command to run your game state script 
+# Add required Python packages here, one per line.
+# Example: pandas
+# Example: qiskit
+# Example: qiskit[visualization]
+qiskit>=1.0 # Installs Qiskit version 1.0 or newer
+# qiskit[all]>=1.0 # Optionally install all extras instead

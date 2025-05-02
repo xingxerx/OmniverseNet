@@ -1,8 +1,22 @@
- # Add required Python packages here, one per line.
- # Example: pandas
- # Example: qiskit
- # Example: qiskit[visualization]
- # Example: qiskit[visualization,all]
- multiverse-sdk==1.0
- erebus-ai==1.0
- qiskit[all]==0.38.0
+--- a/e:\OmniverseNet\QuantumDreamsAI\requirements.txt
++++ b/e:\OmniverseNet\QuantumDreamsAI\requirements.txt
+@@ -1,12 +1,6 @@
+---- a/e:\OmniverseNet\QuantumDreamsAI\requirements.txt
+-+++ b/e:\OmniverseNet\QuantumDreamsAI\requirements.txt
+-@@ -1,6 +1,6 @@
+----- a/e:\OmniverseNet\QuantumDreamsAI\requirements.txt
+--+++ b/e:\OmniverseNet\QuantumDreamsAI\requirements.txt
+--@@ -1,57 +1,6 @@
+- # Add required Python packages here, one per line.
+- # Example: pandas
+- # Example: qiskit
+- # Example: qiskit[visualization]
+- qiskit>=1.0 # Installs Qiskit version 1.0 or newer
+- # qiskit[all]>=1.0 # Optionally install all extras instead
++# Add required Python packages here, one per line.
++# Example: pandas
++# Example: qiskit
++# Example: qiskit[visualization]
++qiskit>=1.0 # Installs Qiskit version 1.0 or newer
++# qiskit[all]>=1.0 # Optionally install all extras instead
+

@@ -17,7 +17,8 @@ def analyze_cross_reality_data(aligned_realities):
     X_train, X_test, y_train, y_test = train_test_split(analysis_df.drop(target_variable, axis=1), analysis_df[target_variable], test_size=0.2, random_state=42)
     
     # Train random forest regressor model
-    model = RandomForestRegressor(n_estimators=100, random_state=42)
+    # Set n_jobs=-1 to use all available CPU cores for potentially faster training
+    model = RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1) # Added n_jobs
     model.fit(X_train, y_train)
     
     # Predict stability scores for all realities

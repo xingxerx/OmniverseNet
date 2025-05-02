@@ -59,3 +59,12 @@ def correct_data_outliers(df: pd.DataFrame, std_dev_threshold: float = 3.0) -> p
     upper = mean + cut_off
     # Return a copy to avoid modifying the original DataFrame slice implicitly
     return df[(df['Data'] > lower) & (df['Data'] < upper)].copy()
+
+# Example usage block: Only runs when the script is executed directly
+if __name__ == "__main__":
+    print("Running multiverse_ingestion directly for demonstration...")
+    # Example: Generate data with default parameters and remove outliers
+    generated_df = ingest_multiverse_data(remove_outliers=True)
+    print("\nGenerated DataFrame head:")
+    print(generated_df.head())
+    print(f"\nTotal rows in generated DataFrame: {len(generated_df)}")

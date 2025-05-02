@@ -42,6 +42,12 @@ for index, row in df.iterrows():
     counts = result.get_counts(compiled_circuit)
     quantum_data.append([row['Universe'], row['Reality'], list(counts.keys())[0]])
 # Save quantum results
+print("\n--- Preparing to save quantum results ---")
 quantum_df = pd.DataFrame(quantum_data, columns=['Universe', 'Reality', 'Quantum_State'])
+print("Columns in DataFrame before saving:")
+print(quantum_df.columns)
+print("First 5 rows of DataFrame before saving:")
+print(quantum_df.head())
+print("-" * 30)
 quantum_df.to_csv('multiverse_quantum_results.csv', index=False)
 print("Quantum analysis complete. Results saved to multiverse_quantum_results.csv")

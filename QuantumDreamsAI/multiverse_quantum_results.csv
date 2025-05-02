@@ -1,2 +1,10 @@
-"Epoch,Loss,Accuracy\n0,0.6931,0.5\n1,0.6931,0.5\n2,0.6931,0.5\n3,0.6931,0.5\n4,0.6931,0.5\n5,0.6931,0.5\n6,0.6931,0.5\n7,0.6931,0.5\n8,0.6931,0.5\n9,0.6931,0.5\n"
+# e:\OmniverseNet\QuantumDreamsAI\Matplotlib.py Lines 29-35
+# --- Check for required columns ---
+required_columns = ['Universe', 'Reality', 'Quantum_State']
+missing_columns = [col for col in required_columns if col not in quantum_df.columns]
 
+if missing_columns: # This condition must be True
+    print(f"Error: The CSV file '{csv_file}' is missing the following required columns: {missing_columns}")
+    print("Please check the output of 'multiverse_quantum_analysis.py' ...")
+    sys.exit(1) # <-- This is line 34, executed because columns are missing
+# ------------------------------------

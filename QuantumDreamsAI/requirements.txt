@@ -1,0 +1,8 @@
+--- /dev/null
++++ b/e:\OmniverseNet\QuantumDreamsAI\requirements.txt
+@@ -0,0 +1,2 @@
++ # Add required Python packages here, one per line.
++ # Example: pandas
+
++ # Example: numpy
++ # Example: torch
